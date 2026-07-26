@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider } from './context/AuthContext';
 import { SplashScreen } from './components/SplashScreen';
+import { WhatsAppSupport } from './components/WhatsAppSupport';
 
 import { HomePage } from './pages/HomePage';
 import { DonorDashboardPage } from './pages/DonorDashboardPage';
@@ -27,6 +28,7 @@ export function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
           </Routes>
+          <WhatsAppSupport />
         </Router>
       </AuthProvider>
     </LanguageProvider>

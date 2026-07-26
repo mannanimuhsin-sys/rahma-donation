@@ -1,9 +1,14 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Heart, ShieldCheck, Mail, Phone, MapPin, Lock } from 'lucide-react';
+import { Heart, ShieldCheck, Mail, Phone, MapPin, Lock, MessageCircle } from 'lucide-react';
 
 export const Footer = () => {
   const { t } = useLanguage();
+
+  const phoneNumber = '917559950633';
+  const prefilledText = encodeURIComponent('അസ്സലാമു അലൈക്കും, RAHMA PWA ആപ്പുമായി ബന്ധപ്പെട്ട സംശയങ്ങൾക്ക് എനിക്ക് സഹായം വേണം.');
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${prefilledText}`;
+  const callUrl = `tel:+${phoneNumber}`;
 
   return (
     <footer className="bg-emerald-dark text-white pt-5 pb-4 mt-auto position-relative overflow-hidden" style={{ background: '#022c22' }}>
@@ -12,9 +17,7 @@ export const Footer = () => {
           
           <div className="col-lg-4 col-md-6">
             <div className="d-flex align-items-center gap-2 mb-3">
-              <div className="bg-emerald-light p-2 rounded-circle text-white d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
-                <Heart size={20} className="fill-warning text-warning" />
-              </div>
+              <img src="/logo.png" alt="RAHMA Logo" className="bg-white p-1 rounded" style={{ height: '40px' }} />
               <span className="fw-bold fs-4 tracking-tight text-white">RAHMA</span>
             </div>
             <p className="text-white text-opacity-75 small mb-3" style={{ lineHeight: 1.6 }}>
@@ -22,7 +25,7 @@ export const Footer = () => {
             </p>
             <div className="d-flex align-items-center gap-2 text-warning small fw-bold">
               <ShieldCheck size={18} />
-              <span>Registered NGO Trust No: NGO-2024/786-RAHMA</span>
+              <span>SKJM Chapparappadavu Range Shema Samithi</span>
             </div>
           </div>
 
@@ -32,24 +35,23 @@ export const Footer = () => {
               <li className="mb-2"><a href="#campaigns" className="text-white text-opacity-75 text-decoration-none hover-text-warning">{t('nav_campaigns')}</a></li>
               <li className="mb-2"><a href="#stats" className="text-white text-opacity-75 text-decoration-none hover-text-warning">{t('nav_stats')}</a></li>
               <li className="mb-2"><a href="#about" className="text-white text-opacity-75 text-decoration-none hover-text-warning">{t('nav_about')}</a></li>
-              <li className="mb-2"><a href="#gallery" className="text-white text-opacity-75 text-decoration-none hover-text-warning">{t('nav_gallery')}</a></li>
             </ul>
           </div>
 
           <div className="col-lg-3 col-md-6">
-            <h6 className="fw-bold text-white mb-3 text-uppercase tracking-wider">{t('contact_title')}</h6>
+            <h6 className="fw-bold text-white mb-3 text-uppercase tracking-wider">Helpline & Support</h6>
             <ul className="list-unstyled space-y-2 small text-white text-opacity-75">
-              <li className="d-flex gap-2 mb-2">
-                <MapPin size={18} className="text-warning flex-shrink-0" />
-                <span>{t('contact_address')}</span>
-              </li>
-              <li className="d-flex gap-2 mb-2">
-                <Mail size={18} className="text-warning flex-shrink-0" />
-                <span>{t('contact_email')}</span>
-              </li>
-              <li className="d-flex gap-2 mb-2">
+              <li className="d-flex align-items-center gap-2 mb-2">
                 <Phone size={18} className="text-warning flex-shrink-0" />
-                <span>{t('contact_phone')}</span>
+                <a href={callUrl} className="text-white text-decoration-none fw-bold">
+                  Direct Call: +91 75599 50633
+                </a>
+              </li>
+              <li className="d-flex align-items-center gap-2 mb-2">
+                <MessageCircle size={18} className="text-success flex-shrink-0" />
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-success text-decoration-none fw-bold">
+                  WhatsApp Support (+91 75599 50633)
+                </a>
               </li>
             </ul>
           </div>
@@ -71,9 +73,9 @@ export const Footer = () => {
         <hr className="border-white border-opacity-15 my-4" />
 
         <div className="d-flex flex-column flex-md-row align-items-center justify-content-between text-white text-opacity-60 small">
-          <div>© {new Date().getFullYear()} RAHMA Platform. {t('footer_rights')}</div>
+          <div>© {new Date().getFullYear()} RAHMA PWA. SKJM Chapparappadavu Range.</div>
           <div className="mt-2 mt-md-0">
-            <span>Powered by Django REST & React PWA Architecture</span>
+            <span>Helpline: +91 75599 50633</span>
           </div>
         </div>
       </div>
