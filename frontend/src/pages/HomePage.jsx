@@ -8,7 +8,7 @@ import { DonateModal } from '../components/DonateModal';
 import { ReceiptModal } from '../components/ReceiptModal';
 import { getCampaigns, getLiveCollectionStats, getOrganization } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
-import { Heart, ShieldCheck, CheckCircle2, MapPin, Mail, Phone, Sparkles, Home, Trophy } from 'lucide-react';
+import { Heart, ShieldCheck, CheckCircle2, MapPin, Mail, Phone, Sparkles, Home, Trophy, Stethoscope, Gift } from 'lucide-react';
 
 export const HomePage = () => {
   const { t } = useLanguage();
@@ -62,7 +62,7 @@ export const HomePage = () => {
     <div className="min-vh-100 d-flex flex-column bg-light">
       <Navbar onOpenDonateModal={() => handleOpenDonate(null, 1000)} />
 
-      {/* Hero Banner with SKJM Branding & Quick Amounts */}
+      {/* Hero Banner with SKJM Branding & Usthad Welfare Header */}
       <HeroBanner 
         onQuickDonate={(amt) => handleOpenDonate(null, amt)} 
         liveStats={liveStats} 
@@ -80,7 +80,7 @@ export const HomePage = () => {
               <h2 className="fw-bold text-emerald-main display-6 mb-0">സമാഹരണ പദ്ധതികൾ (Campaigns)</h2>
             </div>
             <p className="text-muted mb-0 mt-2 mt-md-0 max-w-md">
-              റേഞ്ചിലെ മദ്രസകളുടെ വികസനത്തിനും വിദ്യാഭ്യാസ ആവശ്യങ്ങൾക്കുമായി ഓൺലൈനായി സംഭാവന ചെയ്യാം.
+              ഉസ്താദുമാരുടെ ചികിത്സ, വീട് നിർമാണം, വിവാഹം, മറ്റു ക്ഷേമ പദ്ധതികൾ എന്നിവക്കായി ഓൺലൈനായി സംഭാവന ചെയ്യാം.
             </p>
           </div>
 
@@ -97,17 +97,17 @@ export const HomePage = () => {
         </div>
       </section>
 
-      {/* Clean Range Info Section (No Stock Photos) */}
+      {/* Clean Range Info Section */}
       <section id="about" className="py-5 bg-white border-top">
         <div className="container py-3">
           <div className="row align-items-center gy-4">
             <div className="col-lg-7">
-              <span className="badge badge-emerald mb-2">ABOUT SKJM RANGE</span>
+              <span className="badge badge-emerald mb-2">ABOUT SHEMA SAMITHI</span>
               <h2 className="fw-bold text-emerald-main display-6 mb-3">
-                SKJM ചപ്പറപ്പടവ് റേഞ്ച് ഷെമാ സമിതി
+                SKJM ചപ്പാരപ്പടവ് റെയിഞ്ച് ക്ഷേമ സമിതി
               </h2>
-              <p className="text-muted leading-relaxed mb-4">
-                ചപ്പറപ്പടവ് റേഞ്ചിന് കീഴിലുള്ള 14 മദ്രസകളുടെ സുഗമമായ പ്രവർത്തനത്തിനും വിദ്യാർത്ഥികളുടെ ഉന്നമനത്തിനുമായി സംഘടിപ്പിക്കുന്ന ഡിജിറ്റൽ ഫണ്ട് സമാഹരണം. സുതാര്യവും വേഗതയേറിയതുമായ പെയ്മെന്റുകളും തത്സമയ ഡിജിറ്റൽ റസീപ്റ്റുകളും ഇതിലൂടെ ലഭ്യമാവുന്നു.
+              <p className="text-muted leading-relaxed mb-4" style={{ fontSize: '1.05rem', lineHeight: 1.7 }}>
+                റെയിഞ്ച് പരിധിയിൽ സേവനമനുഷ്ഠിക്കുന്ന ഉസ്താദുമാരുടെ ക്ഷേമത്തിനു വേണ്ടി അവരുടെ ചികിത്സ, വീട് നിർമാണം, വിവാഹം, മറ്റു ആനുകൂല്യങ്ങൾ ലഭിക്കാൻ വേണ്ടിയിട്ടുള്ള ഒരു ഫണ്ട് സമാഹരണമാണ് ഇത്.
               </p>
 
               <div className="p-4 bg-emerald-subtle rounded-4 border border-emerald-light border-opacity-30 d-flex align-items-center gap-3">
@@ -122,8 +122,8 @@ export const HomePage = () => {
             <div className="col-lg-5">
               <div className="p-4 bg-emerald-main text-white rounded-4 shadow-xl text-center">
                 <img src="/logo.png" alt="RAHMA Logo" className="bg-white p-3 rounded-4 shadow mb-3" style={{ height: '110px', objectFit: 'contain' }} />
-                <h4 className="fw-bold text-white mb-2">ചപ്പറപ്പടവ് റേഞ്ച്</h4>
-                <p className="text-white text-opacity-80 small mb-4">14 മദ്രസകളുടെ കൂട്ടായ്മ & ഡിജിറ്റൽ സമാഹരണം</p>
+                <h4 className="fw-bold text-white mb-2">ചപ്പാരപ്പടവ് റെയിഞ്ച് ക്ഷേമ സമിതി</h4>
+                <p className="text-white text-opacity-80 small mb-4">ഉസ്താദുമാരുടെ ക്ഷേമ പദ്ധതികൾക്കുള്ള ഡിജിറ്റൽ ഫണ്ട് സമാഹരണം</p>
                 <button 
                   onClick={() => handleOpenDonate(null, 1000)}
                   className="btn btn-gold text-white font-bold py-3 px-4 rounded-3 w-100 shadow"

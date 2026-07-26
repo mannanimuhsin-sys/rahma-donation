@@ -8,31 +8,29 @@ from django.contrib.auth import get_user_model
 from apps.organizations.models import Organization
 from apps.payment_settings.models import PaymentSetting
 from apps.campaigns.models import Campaign
-from apps.donations.models import Donation
 
 User = get_user_model()
 
 def reset_and_seed():
-    print("Resetting database for SKJM Chapparappadavu Range (Starting at 0 Balance)...")
-
-    # Clear donations
-    Donation.objects.all().delete()
-    print("[OK] All previous donations cleared. Balance reset to 0.")
-
     # 1. Organization
     org, created = Organization.objects.get_or_create(
         slug='skjm-chapparappadavu-range',
         defaults={
-            'name': 'SKJM Chapparappadavu Range Shema Samithi',
-            'tagline': 'Serving Madrasas & Islamic Education Across the Range',
-            'about_text': 'SKJM Chapparappadavu Range Shema Samithi is dedicated to Islamic education, madrasa welfare, student empowerment, and community development across all 17 range madrasas.',
+            'name': 'SKJM ചപ്പാരപ്പടവ് റെയിഞ്ച് ക്ഷേമ സമിതി',
+            'tagline': 'ഉസ്താദുമാരുടെ ക്ഷേമ പദ്ധതികൾക്കുള്ള ഡിജിറ്റൽ ഫണ്ട് സമാഹരണം',
+            'about_text': 'റെയിഞ്ച് പരിധിയിൽ സേവനമനുഷ്ഠിക്കുന്ന ഉസ്താദുമാരുടെ ക്ഷേമത്തിനു വേണ്ടി അവരുടെ ചികിത്സ, വീട് നിർമാണം, വിവാഹം, മറ്റു ആനുകൂല്യങ്ങൾ ലഭിക്കാൻ വേണ്ടിയിട്ടുള്ള ഒരു ഫണ്ട് സമാഹരണമാണ് ഇത്.',
             'address': 'Chapparappadavu Range Office, Kannur, Kerala, India',
             'contact_email': 'contact@skjm-chapparappadavu.org',
-            'contact_phone': '+91 98765 43210',
+            'contact_phone': '+91 75599 50633',
             'registration_number': 'SKJM-REG-RANGE-017'
         }
     )
-    print(f"[OK] Organization: {org.name}")
+
+    org.name = 'SKJM ചപ്പാരപ്പടവ് റെയിഞ്ച് ക്ഷേമ സമിതി'
+    org.about_text = 'റെയിഞ്ച് പരിധിയിൽ സേവനമനുഷ്ഠിക്കുന്ന ഉസ്താദുമാരുടെ ക്ഷേമത്തിനു വേണ്ടി അവരുടെ ചികിത്സ, വീട് നിർമാണം, വിവാഹം, മറ്റു ആനുകൂല്യങ്ങൾ ലഭിക്കാൻ വേണ്ടിയിട്ടുള്ള ഒരു ഫണ്ട് സമാഹരണമാണ് ഇത്.'
+    org.save()
+
+    print("[OK] Organization updated.")
 
     # 2. Users
     if not User.objects.filter(username='admin').exists():
@@ -45,7 +43,7 @@ def reset_and_seed():
             role=User.Role.SUPER_ADMIN,
             organization=org
         )
-        print("[OK] Super Admin created (username: admin, password: admin123)")
+        print("[OK] Super Admin created.")
 
     if not User.objects.filter(username='orgadmin').exists():
         User.objects.create_user(
@@ -57,7 +55,7 @@ def reset_and_seed():
             role=User.Role.ADMIN,
             organization=org
         )
-        print("[OK] Range Admin created (username: orgadmin, password: admin123)")
+        print("[OK] Range Admin created.")
 
     # 3. Payment Settings
     PaymentSetting.objects.get_or_create(
@@ -78,22 +76,22 @@ def reset_and_seed():
     )
     print("[OK] Payment Settings created.")
 
-    # 4. Campaigns (Reset collected amounts to 0)
+    # 4. Campaigns
     Campaign.objects.all().delete()
     campaigns_data = [
         {
-            'title': 'SKJM Chapparappadavu Range Shema Samithi Fund 2026',
-            'description': 'Support Islamic education, madrasa infrastructure, student scholarships, and range activities across all 17 range madrasas.',
-            'category': 'Range Shema Samithi',
+            'title': 'SKJM ചപ്പാരപ്പടവ് റെയിഞ്ച് ക്ഷേമ സമിതി ഫണ്ട് 2026',
+            'description': 'റെയിഞ്ച് പരിധിയിൽ സേവനമനുഷ്ഠിക്കുന്ന ഉസ്താദുമാരുടെ ക്ഷേമത്തിനു വേണ്ടി അവരുടെ ചികിത്സ, വീട് നിർമാണം, വിവാഹം, മറ്റു ആനുകൂല്യങ്ങൾ ലഭിക്കാൻ വേണ്ടിയിട്ടുള്ള ഫണ്ട് സമാഹരണം.',
+            'category': 'ക്ഷേമ സമിതി ഫണ്ട്',
             'target_amount': 1000000.00,
             'collected_amount': 0.00,
             'donor_count': 0,
             'status': 'ACTIVE'
         },
         {
-            'title': 'Madrasa Student Scholarship & Books Fund',
-            'description': 'Providing free textbooks, uniforms, and scholarships to underprivileged students studying in range madrasas.',
-            'category': 'Madrasa Education',
+            'title': 'ഉസ്താദുമാരുടെ അടിയന്തര ചികിത്സാ & റിലീഫ് ഫണ്ട്',
+            'description': 'അടിയന്തര ഘട്ടങ്ങളിൽ ഉസ്താദുമാർക്ക് മെഡിക്കൽ ചികിത്സയും സാമ്പത്തിക സഹായവും എത്തിക്കാനുള്ള സമാഹരണം.',
+            'category': 'ചികിത്സാ റിലീഫ്',
             'target_amount': 500000.00,
             'collected_amount': 0.00,
             'donor_count': 0,
@@ -103,9 +101,7 @@ def reset_and_seed():
 
     for c_data in campaigns_data:
         Campaign.objects.create(organization=org, **c_data)
-    print("[OK] 2 Campaigns created with 0 initial balance.")
-
-    print("Database reset & 0-balance initialization completed successfully.")
+    print("[OK] Campaigns updated for Usthad Welfare.")
 
 if __name__ == '__main__':
     reset_and_seed()

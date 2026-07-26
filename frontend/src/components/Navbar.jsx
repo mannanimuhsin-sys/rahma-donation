@@ -47,7 +47,7 @@ export const Navbar = ({ onOpenDonateModal }) => {
               RAHMA
             </span>
             <span className="small text-muted d-block" style={{ fontSize: '0.68rem' }}>
-              SKJM CHAPPARAPPADAVU RANGE
+              SKJM ചപ്പാരപ്പടവ് റെയിഞ്ച് ക്ഷേമ സമിതി
             </span>
           </div>
         </Link>
