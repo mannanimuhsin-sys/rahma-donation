@@ -6,13 +6,15 @@ import { LiveStats } from '../components/LiveStats';
 import { Footer } from '../components/Footer';
 import { DonateModal } from '../components/DonateModal';
 import { ReceiptModal } from '../components/ReceiptModal';
+import { BottomNavBar } from '../components/BottomNavBar';
 import { getCampaigns, getLiveCollectionStats, getOrganization } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
-import { Heart, ShieldCheck, CheckCircle2, MapPin, Mail, Phone, Sparkles, Home, Trophy, Stethoscope, Gift } from 'lucide-react';
+import { Heart, ShieldCheck, CheckCircle2, MapPin, Mail, Phone, Sparkles, Home, Trophy, Crown, HelpCircle } from 'lucide-react';
 
 export const HomePage = () => {
   const { t } = useLanguage();
   
+  const [activeTab, setActiveTab] = useState('home'); // 'home' | 'rankings' | 'donors' | 'about'
   const [organization, setOrganization] = useState(null);
   const [campaigns, setCampaigns] = useState([]);
   const [liveStats, setLiveStats] = useState(null);
@@ -58,86 +60,124 @@ export const HomePage = () => {
     loadData(); // Refresh live stats and rankings
   };
 
+  const totalCollected = liveStats?.total_collected || 0;
+
   return (
-    <div className="min-vh-100 d-flex flex-column bg-light">
+    <div className="min-vh-100 d-flex flex-column bg-light pb-5 mb-4">
       <Navbar onOpenDonateModal={() => handleOpenDonate(null, 1000)} />
 
-      {/* Hero Banner with SKJM Branding & Usthad Welfare Header */}
-      <HeroBanner 
-        onQuickDonate={(amt) => handleOpenDonate(null, amt)} 
-        liveStats={liveStats} 
-      />
-
-      {/* Live Collection Leaderboards (Madrasa Rankings & Top Donors) */}
-      <LiveStats stats={liveStats} />
-
-      {/* Active Range Campaigns Section */}
-      <section id="campaigns" className="py-5 bg-light border-top">
-        <div className="container py-3">
-          <div className="d-flex flex-column flex-md-row align-items-md-end justify-content-between mb-4">
-            <div>
-              <span className="badge badge-emerald mb-2">SKJM CHAPPARAPPADAVU RANGE</span>
-              <h2 className="fw-bold text-emerald-main display-6 mb-0">സമാഹരണ പദ്ധതികൾ (Campaigns)</h2>
-            </div>
-            <p className="text-muted mb-0 mt-2 mt-md-0 max-w-md">
-              ഉസ്താദുമാരുടെ ചികിത്സ, വീട് നിർമാണം, വിവാഹം, മറ്റു ക്ഷേമ പദ്ധതികൾ എന്നിവക്കായി ഓൺലൈനായി സംഭാവന ചെയ്യാം.
-            </p>
-          </div>
-
-          <div className="row g-4">
-            {campaigns.map((camp) => (
-              <div key={camp.id} className="col-md-6 col-lg-6">
-                <CampaignCard 
-                  campaign={camp} 
-                  onDonate={(c) => handleOpenDonate(c, 1000)} 
-                />
-              </div>
-            ))}
-          </div>
+      {/* Top Floating Highlight Banner for Total Collection */}
+      <div className="bg-emerald-main text-white py-2 px-3 text-center border-bottom shadow-sm">
+        <div className="container d-flex align-items-center justify-content-center gap-2">
+          <span className="badge bg-warning text-dark font-bold">LIVE COLLECTION</span>
+          <span className="fw-bold">ആകെ സമാഹരിച്ച തുക:</span>
+          <strong className="fs-5 text-warning font-extrabold">₹{totalCollected.toLocaleString('en-IN')}</strong>
         </div>
-      </section>
+      </div>
 
-      {/* Clean Range Info Section */}
-      <section id="about" className="py-5 bg-white border-top">
-        <div className="container py-3">
-          <div className="row align-items-center gy-4">
-            <div className="col-lg-7">
-              <span className="badge badge-emerald mb-2">ABOUT SHEMA SAMITHI</span>
-              <h2 className="fw-bold text-emerald-main display-6 mb-3">
-                SKJM ചപ്പാരപ്പടവ് റെയിഞ്ച് ക്ഷേമ സമിതി
-              </h2>
-              <p className="text-muted leading-relaxed mb-4" style={{ fontSize: '1.05rem', lineHeight: 1.7 }}>
-                റെയിഞ്ച് പരിധിയിൽ സേവനമനുഷ്ഠിക്കുന്ന ഉസ്താദുമാരുടെ ക്ഷേമത്തിനു വേണ്ടി അവരുടെ ചികിത്സ, വീട് നിർമാണം, വിവാഹം, മറ്റു ആനുകൂല്യങ്ങൾ ലഭിക്കാൻ വേണ്ടിയിട്ടുള്ള ഒരു ഫണ്ട് സമാഹരണമാണ് ഇത്.
-              </p>
+      {/* Dynamic Tab Screen Switcher */}
+      {activeTab === 'home' && (
+        <>
+          <HeroBanner 
+            onQuickDonate={(amt) => handleOpenDonate(null, amt)} 
+            liveStats={liveStats} 
+          />
 
-              <div className="p-4 bg-emerald-subtle rounded-4 border border-emerald-light border-opacity-30 d-flex align-items-center gap-3">
-                <ShieldCheck size={36} className="text-emerald-main flex-shrink-0" />
+          <section id="campaigns" className="py-4 py-md-5 bg-light">
+            <div className="container">
+              <div className="d-flex flex-column flex-md-row align-items-md-end justify-content-between mb-4">
                 <div>
-                  <h6 className="fw-bold text-emerald-main mb-1">100% ഡിജിറ്റൽ സുതാര്യത & തത്സമയ റസീപ്റ്റ്</h6>
-                  <span className="small text-muted">നിങ്ങൾ നൽകുന്ന ഓരോ സംഭാവനക്കും ഉടനടി QR കോഡോട് കൂടിയ ഔദ്യോഗിക PDF റസീപ്റ്റ് ലഭിക്കുന്നു.</span>
+                  <span className="badge badge-emerald mb-2">SKJM CHAPPARAPPADAVU RANGE</span>
+                  <h2 className="fw-bold text-emerald-main display-6 mb-0">സമാഹരണ പദ്ധതികൾ</h2>
+                </div>
+                <button 
+                  onClick={() => setActiveTab('rankings')} 
+                  className="btn btn-outline-emerald btn-sm mt-2 mt-md-0 font-bold d-flex align-items-center gap-1"
+                >
+                  <Trophy size={16} />
+                  <span>മദ്രസ റാങ്കിംഗ് കാണുക</span>
+                </button>
+              </div>
+
+              <div className="row g-4">
+                {campaigns.map((camp) => (
+                  <div key={camp.id} className="col-md-6">
+                    <CampaignCard 
+                      campaign={camp} 
+                      onDonate={(c) => handleOpenDonate(c, 1000)} 
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
+      {/* Tab: Madrasa Rankings */}
+      {activeTab === 'rankings' && (
+        <div className="container py-4">
+          <LiveStats stats={liveStats} activeSection="rankings" />
+        </div>
+      )}
+
+      {/* Tab: Top Donors */}
+      {activeTab === 'donors' && (
+        <div className="container py-4">
+          <LiveStats stats={liveStats} activeSection="donors" />
+        </div>
+      )}
+
+      {/* Tab: About & Usthad Welfare Info */}
+      {activeTab === 'about' && (
+        <section id="about" className="py-5 bg-white">
+          <div className="container">
+            <div className="row align-items-center gy-4">
+              <div className="col-lg-7">
+                <span className="badge badge-emerald mb-2">ABOUT SHEMA SAMITHI</span>
+                <h2 className="fw-bold text-emerald-main display-6 mb-3">
+                  SKJM ചപ്പാരപ്പടവ് റെയിഞ്ച് ക്ഷേമ സമിതി
+                </h2>
+                <p className="text-muted leading-relaxed mb-4" style={{ fontSize: '1.08rem', lineHeight: 1.7 }}>
+                  റെയിഞ്ച് പരിധിയിൽ സേവനമനുഷ്ഠിക്കുന്ന ഉസ്താദുമാരുടെ ക്ഷേമത്തിനു വേണ്ടി അവരുടെ ചികിത്സ, വീട് നിർമാണം, വിവാഹം, മറ്റു ആനുകൂല്യങ്ങൾ ലഭിക്കാൻ വേണ്ടിയിട്ടുള്ള ഒരു ഫണ്ട് സമാഹരണമാണ് ഇത്.
+                </p>
+
+                <div className="p-4 bg-emerald-subtle rounded-4 border border-emerald-light border-opacity-30 d-flex align-items-center gap-3 mb-3">
+                  <ShieldCheck size={36} className="text-emerald-main flex-shrink-0" />
+                  <div>
+                    <h6 className="fw-bold text-emerald-main mb-1">100% ഡിജിറ്റൽ സുതാര്യത & തത്സമയ റസീപ്റ്റ്</h6>
+                    <span className="small text-muted">നിങ്ങൾ നൽകുന്ന ഓരോ സംഭാവനക്കും ഉടനടി QR കോഡോട് കൂടിയ ഔദ്യോഗിക PDF റസീപ്റ്റ് ലഭിക്കുന്നു.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-lg-5">
+                <div className="p-4 bg-emerald-main text-white rounded-4 shadow-xl text-center">
+                  <img src="/logo.png" alt="RAHMA Logo" className="bg-white p-3 rounded-4 shadow mb-3" style={{ height: '100px', objectFit: 'contain' }} />
+                  <h4 className="fw-bold text-white mb-2">ചപ്പാരപ്പടവ് റെയിഞ്ച് ക്ഷേമ സമിതി</h4>
+                  <p className="text-white text-opacity-80 small mb-4">ഉസ്താദുമാരുടെ ക്ഷേമ പദ്ധതികൾക്കുള്ള ഫണ്ട് സമാഹരണം</p>
+                  <button 
+                    onClick={() => handleOpenDonate(null, 1000)}
+                    className="btn btn-gold text-white font-bold py-3 px-4 rounded-3 w-100 shadow"
+                  >
+                    <Heart size={20} className="fill-white me-2 inline" />
+                    <span>ഇപ്പോൾ സംഭാവന ചെയ്യുക</span>
+                  </button>
                 </div>
               </div>
             </div>
-
-            <div className="col-lg-5">
-              <div className="p-4 bg-emerald-main text-white rounded-4 shadow-xl text-center">
-                <img src="/logo.png" alt="RAHMA Logo" className="bg-white p-3 rounded-4 shadow mb-3" style={{ height: '110px', objectFit: 'contain' }} />
-                <h4 className="fw-bold text-white mb-2">ചപ്പാരപ്പടവ് റെയിഞ്ച് ക്ഷേമ സമിതി</h4>
-                <p className="text-white text-opacity-80 small mb-4">ഉസ്താദുമാരുടെ ക്ഷേമ പദ്ധതികൾക്കുള്ള ഡിജിറ്റൽ ഫണ്ട് സമാഹരണം</p>
-                <button 
-                  onClick={() => handleOpenDonate(null, 1000)}
-                  className="btn btn-gold text-white font-bold py-3 px-4 rounded-3 w-100 shadow"
-                >
-                  <Heart size={20} className="fill-white me-2 inline" />
-                  <span>ഇപ്പോൾ സംഭാവന ചെയ്യുക</span>
-                </button>
-              </div>
-            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <Footer />
+
+      {/* Instagram/WhatsApp Style Bottom Navigation Bar */}
+      <BottomNavBar 
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onOpenDonate={() => handleOpenDonate(null, 1000)}
+      />
 
       {/* Donation Modal */}
       <DonateModal 
