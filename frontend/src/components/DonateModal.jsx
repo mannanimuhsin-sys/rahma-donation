@@ -161,7 +161,7 @@ export const DonateModal = ({ isOpen, onClose, campaign, initialAmount, onSucces
               <div className="mb-4">
                 <label className="form-label fw-bold text-emerald-main small text-uppercase d-flex align-items-center gap-1">
                   <User size={16} />
-                  <span>1. ദാതാവിന്റെ വിവരങ്ങൾ (Donor Details)</span>
+                  <span>1. നിങ്ങളുടെ വിവരങ്ങൾ (Personal Details)</span>
                 </label>
                 <div className="row g-3">
                   <div className="col-md-4">

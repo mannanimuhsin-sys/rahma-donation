@@ -59,7 +59,7 @@ export const BottomNavBar = ({ activeTab, setActiveTab, onOpenDonate }) => {
             </button>
           </div>
 
-          {/* Tab 3: Top Donors */}
+          {/* Tab 3: Executive Term "ഉദാരമനസ്കർ" (Generous Supporters) */}
           <button
             onClick={() => setActiveTab('donors')}
             className={`btn border-0 text-white flex-fill p-1.5 transition-all d-flex flex-column align-items-center justify-content-center ${
@@ -68,7 +68,7 @@ export const BottomNavBar = ({ activeTab, setActiveTab, onOpenDonate }) => {
             style={{ fontSize: '0.7rem' }}
           >
             <Crown size={22} className={activeTab === 'donors' ? 'text-warning' : 'text-white'} />
-            <span className="mt-1">ദാതാക്കൾ</span>
+            <span className="mt-1">ഉദാരമനസ്കർ</span>
           </button>
 
           {/* Tab 4: Helpline / About */}
