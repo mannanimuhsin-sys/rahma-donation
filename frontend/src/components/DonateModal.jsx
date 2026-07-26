@@ -3,7 +3,28 @@ import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { createDonationOrder, verifyDonationPayment, getPublicPaymentSettings } from '../services/api';
 import confetti from 'canvas-confetti';
-import { X, Heart, ShieldCheck, QrCode, Smartphone, CreditCard, Building, CheckCircle2, FileText, Download } from 'lucide-react';
+import { X, Heart, ShieldCheck, QrCode, Smartphone, CreditCard, Building, CheckCircle2, User, Home, Phone, MapPin } from 'lucide-react';
+
+export const RANGE_MADRASAS = [
+  'Al-Madrasathul Islamiyya, Chapparappadavu',
+  'Hayathul Islam Madrasa, Karuvanchal',
+  'Sirajul Uloom Madrasa, Tadikkadabu',
+  'Badrul Huda Madrasa, Padappengad',
+  'Markazul Uloom Madrasa, Thervayil',
+  'Hidayathul Islam Madrasa, Mavichery',
+  'Minhajus Sunnah Madrasa, Alakkode',
+  'Darul Iman Madrasa, Karthikapuram',
+  'Irshadul Muslimeen Madrasa, Pooparamba',
+  'Nurul Islam Madrasa, Manakadavu',
+  'Busthanul Uloom Madrasa, Chengalayi',
+  'Fathima Zahra Madrasa, Reyarome',
+  'Thanjimul Muslimeen Madrasa, Ottathai',
+  'Raudul Uloom Madrasa, Nedungome',
+  'Sabeelul Huda Madrasa, Arabode',
+  'Markazus Sunnah Madrasa, Kaniyarvayal',
+  'Manharul Uloom Madrasa, Kooveri',
+  'Other'
+];
 
 export const DonateModal = ({ isOpen, onClose, campaign, initialAmount, onSuccessReceipt }) => {
   const { t } = useLanguage();
@@ -11,11 +32,16 @@ export const DonateModal = ({ isOpen, onClose, campaign, initialAmount, onSucces
 
   const [amount, setAmount] = useState(initialAmount || 1000);
   const [customAmount, setCustomAmount] = useState(initialAmount || 1000);
+  
+  // User Fields
   const [donorName, setDonorName] = useState('');
-  const [donorEmail, setDonorEmail] = useState('');
+  const [houseName, setHouseName] = useState('');
   const [donorPhone, setDonorPhone] = useState('');
+  const [donorEmail, setDonorEmail] = useState('');
+  const [selectedMadrasa, setSelectedMadrasa] = useState(RANGE_MADRASAS[0]);
+  const [otherPlace, setOtherPlace] = useState('');
+  
   const [paymentMethod, setPaymentMethod] = useState('UPI');
-  const [paymentConfig, setPaymentConfig] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -34,14 +60,6 @@ export const DonateModal = ({ isOpen, onClose, campaign, initialAmount, onSucces
     }
   }, [initialAmount]);
 
-  useEffect(() => {
-    if (isOpen) {
-      getPublicPaymentSettings()
-        .then(data => setPaymentConfig(data))
-        .catch(err => console.error("Failed to load payment config:", err));
-    }
-  }, [isOpen]);
-
   if (!isOpen) return null;
 
   const handleAmountClick = (val) => {
@@ -58,11 +76,15 @@ export const DonateModal = ({ isOpen, onClose, campaign, initialAmount, onSucces
   const handleSubmitPayment = async (e) => {
     e.preventDefault();
     if (!amount || amount <= 0) {
-      setError("Please enter a valid donation amount.");
+      setError("സംഭാവന തുക നൽകുക (Please enter a valid donation amount).");
       return;
     }
-    if (!donorName || !donorEmail) {
-      setError("Please enter donor name and email address.");
+    if (!donorName.trim() || !houseName.trim() || !donorPhone.trim()) {
+      setError("പേര്, വീട്ടു പേര്, മൊബൈൽ നമ്പർ എന്നിവ നിർബന്ധമാണ്.");
+      return;
+    }
+    if (selectedMadrasa === 'Other' && !otherPlace.trim()) {
+      setError("സ്ഥലം / മദ്രസ പേര് നൽകുക (Please enter location name).");
       return;
     }
 
@@ -75,25 +97,27 @@ export const DonateModal = ({ isOpen, onClose, campaign, initialAmount, onSucces
         campaign_id: campaign ? campaign.id : null,
         amount: Number(amount),
         donor_name: donorName,
-        donor_email: donorEmail,
+        house_name: houseName,
         donor_phone: donorPhone,
+        donor_email: donorEmail || 'donor@skjm-chapparappadavu.org',
+        madrasa_name: selectedMadrasa,
+        other_place: selectedMadrasa === 'Other' ? otherPlace : '',
         payment_method: paymentMethod,
       });
 
-      // 2. Automated Instant Verification & Receipt Generation
+      // 2. Instant Payment Verification & Receipt Generation
       const verifyRes = await verifyDonationPayment({
         donation_id: orderRes.donation_id,
         razorpay_order_id: orderRes.order_id,
         razorpay_payment_id: `pay_${paymentMethod.toLowerCase()}_${Date.now()}`,
-        razorpay_signature: 'sig_auto_verified_rahma'
+        razorpay_signature: 'sig_auto_verified_skjm'
       });
 
       setLoading(false);
       
-      // Trigger celebration confetti
       confetti({
-        particleCount: 100,
-        spread: 70,
+        particleCount: 120,
+        spread: 80,
         origin: { y: 0.6 }
       });
 
@@ -103,22 +127,22 @@ export const DonateModal = ({ isOpen, onClose, campaign, initialAmount, onSucces
       }
     } catch (err) {
       console.error("Payment error:", err);
-      setError(err.response?.data?.error || "Payment processing failed. Please try again.");
+      setError(err.response?.data?.error || "പെയ്മെന്റ് പ്രോസസിംഗിൽ തടസ്സം നേരിട്ടു. വീണ്ടും ശ്രമിക്കുക.");
       setLoading(false);
     }
   };
 
   return (
-    <div className="modal fade show d-block tab-modal-backdrop" style={{ background: 'rgba(2, 44, 34, 0.75)', backdropFilter: 'blur(8px)' }}>
+    <div className="modal fade show d-block tab-modal-backdrop" style={{ background: 'rgba(2, 44, 34, 0.8)', backdropFilter: 'blur(8px)' }}>
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content border-0 rounded-4 shadow-2xl overflow-hidden">
           
           {/* Header */}
           <div className="modal-header bg-emerald-main text-white p-4 border-0 position-relative">
             <div>
-              <span className="badge badge-gold mb-1">AUTOMATED PAYMENT GATEWAY</span>
+              <span className="badge badge-gold mb-1">SKJM CHAPPARAPPADAVU RANGE SHEMA SAMITHI</span>
               <h4 className="fw-bold mb-0">
-                {campaign ? campaign.title : 'General Sadaqah & Zakat Fund'}
+                {campaign ? campaign.title : 'ആൻലൈൻ സംഭാവന ചെയ്യാം'}
               </h4>
             </div>
             <button 
@@ -136,13 +160,94 @@ export const DonateModal = ({ isOpen, onClose, campaign, initialAmount, onSucces
             )}
 
             <form onSubmit={handleSubmitPayment}>
+              {/* Donor Details Section */}
+              <div className="mb-4">
+                <label className="form-label fw-bold text-emerald-main small text-uppercase d-flex align-items-center gap-1">
+                  <User size={16} />
+                  <span>1. ദാതാവിന്റെ വിവരങ്ങൾ (Donor Details)</span>
+                </label>
+                <div className="row g-3">
+                  <div className="col-md-4">
+                    <label className="form-label small fw-bold text-secondary mb-1">പേര് (Name) *</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="നിങ്ങളുടെ പേര്"
+                      value={donorName}
+                      onChange={(e) => setDonorName(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="col-md-4">
+                    <label className="form-label small fw-bold text-secondary mb-1">വീട്ടു പേര് (House Name) *</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="വീട്ടു പേര്"
+                      value={houseName}
+                      onChange={(e) => setHouseName(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="col-md-4">
+                    <label className="form-label small fw-bold text-secondary mb-1">മൊബൈൽ നമ്പർ (Mobile) *</label>
+                    <input
+                      type="tel"
+                      className="form-control"
+                      placeholder="10 അക്ക മൊബൈൽ നമ്പർ"
+                      value={donorPhone}
+                      onChange={(e) => setDonorPhone(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Madrasa Selection Dropdown */}
+              <div className="mb-4 p-3 bg-emerald-subtle rounded-3 border border-emerald-light border-opacity-30">
+                <label className="form-label fw-bold text-emerald-main small text-uppercase d-flex align-items-center gap-1 mb-2">
+                  <Home size={16} />
+                  <span>2. മദ്രസ തിരഞ്ഞെടുക്കുക (Select Range Madrasa) *</span>
+                </label>
+
+                <select 
+                  className="form-select fw-bold text-emerald-main mb-2"
+                  value={selectedMadrasa}
+                  onChange={(e) => setSelectedMadrasa(e.target.value)}
+                  required
+                >
+                  {RANGE_MADRASAS.map((m, idx) => (
+                    <option key={idx} value={m}>
+                      {m === 'Other' ? 'മറ്റുള്ളവ (Other Place)' : `${idx + 1}. ${m}`}
+                    </option>
+                  ))}
+                </select>
+
+                {/* Manual Input for Other Place */}
+                {selectedMadrasa === 'Other' && (
+                  <div className="mt-2">
+                    <label className="form-label small fw-bold text-emerald-main">സ്ഥലം / മദ്രസ പേര് ടൈപ്പ് ചെയ്യുക (Enter Location) *</label>
+                    <input
+                      type="text"
+                      className="form-control fw-bold"
+                      placeholder="സ്ഥലം / മദ്രസയുടെ പേര് നൽകുക"
+                      value={otherPlace}
+                      onChange={(e) => setOtherPlace(e.target.value)}
+                      required
+                    />
+                  </div>
+                )}
+              </div>
+
               {/* Preset Amounts */}
               <div className="mb-4">
                 <label className="form-label fw-bold text-emerald-main small text-uppercase">
-                  1. {t('enter_amount')}
+                  3. സംഭാവന തുക നൽകുക (Donation Amount)
                 </label>
                 <div className="d-flex flex-wrap gap-2 mb-3">
-                  {[250, 500, 1000, 2500, 5000, 10000].map((preset) => (
+                  {[100, 250, 500, 1000, 2500, 5000, 10000].map((preset) => (
                     <button
                       type="button"
                       key={preset}
@@ -170,7 +275,7 @@ export const DonateModal = ({ isOpen, onClose, campaign, initialAmount, onSucces
               {/* Payment Methods */}
               <div className="mb-4">
                 <label className="form-label fw-bold text-emerald-main small text-uppercase">
-                  2. Select Payment Method
+                  4. പെയ്മെന്റ് രീതി തിരഞ്ഞെടുക്കുക (Payment Method)
                 </label>
                 <div className="row g-2">
                   {[
@@ -179,73 +284,25 @@ export const DonateModal = ({ isOpen, onClose, campaign, initialAmount, onSucces
                     { id: 'PHONEPE', label: 'PhonePe', icon: <Smartphone size={18} /> },
                     { id: 'PAYTM', label: 'Paytm', icon: <Smartphone size={18} /> },
                     { id: 'NET_BANKING', label: 'Net Banking', icon: <Building size={18} /> },
-                    { id: 'CREDIT_CARD', label: 'Credit/Debit Card', icon: <CreditCard size={18} /> }
+                    { id: 'CREDIT_CARD', label: 'Cards', icon: <CreditCard size={18} /> }
                   ].map((method) => (
                     <div key={method.id} className="col-6 col-md-4">
                       <div
                         onClick={() => setPaymentMethod(method.id)}
-                        className={`p-3 rounded-3 border text-center cursor-pointer transition-all ${
+                        className={`p-2.5 rounded-3 border text-center cursor-pointer transition-all ${
                           paymentMethod === method.id 
                             ? 'border-emerald-light bg-emerald-subtle text-emerald-main fw-bold shadow-sm' 
                             : 'bg-light text-secondary'
                         }`}
                         style={{ cursor: 'pointer' }}
                       >
-                        <div className="d-flex align-items-center justify-content-center gap-2">
+                        <div className="d-flex align-items-center justify-content-center gap-1.5">
                           {method.icon}
                           <span className="small">{method.label}</span>
                         </div>
                       </div>
                     </div>
                   ))}
-                </div>
-              </div>
-
-              {/* Donor Contact Details */}
-              <div className="mb-4">
-                <label className="form-label fw-bold text-emerald-main small text-uppercase">
-                  3. Donor Details (For Official Receipt)
-                </label>
-                <div className="row g-3">
-                  <div className="col-md-6">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder={t('donor_full_name')}
-                      value={donorName}
-                      onChange={(e) => setDonorName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <input
-                      type="email"
-                      className="form-control"
-                      placeholder={t('donor_email')}
-                      value={donorEmail}
-                      onChange={(e) => setDonorEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="col-md-12">
-                    <input
-                      type="tel"
-                      className="form-control"
-                      placeholder={`${t('donor_phone')} (Optional)`}
-                      value={donorPhone}
-                      onChange={(e) => setDonorPhone(e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Instant Verification Notice */}
-              <div className="p-3 bg-emerald-subtle rounded-3 mb-4 d-flex align-items-center gap-3 border border-emerald-light border-opacity-30">
-                <ShieldCheck size={28} className="text-emerald-light flex-shrink-0" />
-                <div className="small text-emerald-main">
-                  <strong>{t('test_mode_notice')}</strong>
-                  <br />
-                  Receipt generated automatically upon successful transaction.
                 </div>
               </div>
 
@@ -259,7 +316,7 @@ export const DonateModal = ({ isOpen, onClose, campaign, initialAmount, onSucces
                 ) : (
                   <>
                     <Heart size={22} className="fill-white" />
-                    <span>Pay ₹{Number(amount).toLocaleString('en-IN')} & Generate Receipt</span>
+                    <span>പണം അടക്കുക ₹{Number(amount).toLocaleString('en-IN')} & റസീപ്റ്റ് വാങ്ങുക</span>
                   </>
                 )}
               </button>

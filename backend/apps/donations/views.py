@@ -19,14 +19,17 @@ class CreateOrderView(APIView):
         campaign_id = request.data.get('campaign_id')
         amount = request.data.get('amount')
         donor_name = request.data.get('donor_name')
-        donor_email = request.data.get('donor_email')
+        house_name = request.data.get('house_name', '')
+        donor_email = request.data.get('donor_email', '')
         donor_phone = request.data.get('donor_phone', '')
+        madrasa_name = request.data.get('madrasa_name', 'Other')
+        other_place = request.data.get('other_place', '')
         payment_method = request.data.get('payment_method', 'UPI')
 
         if not amount or float(amount) <= 0:
             return Response({'error': 'Please enter a valid donation amount.'}, status=status.HTTP_400_BAD_REQUEST)
-        if not donor_name or not donor_email:
-            return Response({'error': 'Donor name and email are required.'}, status=status.HTTP_400_BAD_REQUEST)
+        if not donor_name or not donor_phone:
+            return Response({'error': 'Donor name and mobile number are required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         campaign = None
         if campaign_id:
@@ -41,8 +44,11 @@ class CreateOrderView(APIView):
             campaign=campaign,
             donor=donor_user,
             donor_name=donor_name,
+            house_name=house_name,
             donor_email=donor_email,
             donor_phone=donor_phone,
+            madrasa_name=madrasa_name,
+            other_place=other_place,
             amount=amount,
             payment_method=payment_method,
             payment_status='PENDING'
@@ -62,8 +68,9 @@ class CreateOrderView(APIView):
             'currency': 'INR',
             'key': payment_setting.api_key if payment_setting else 'rzp_test_rahma12345678',
             'donor_name': donation.donor_name,
-            'donor_email': donation.donor_email,
+            'house_name': donation.house_name,
             'donor_phone': donation.donor_phone,
+            'madrasa_name': donation.display_madrasa,
             'is_test_mode': is_test_mode,
             'message': 'Donation order initialized successfully'
         })
@@ -94,19 +101,16 @@ class VerifyPaymentView(APIView):
                 'receipt_url': pdf_url
             })
 
-        # Update payment credentials
         donation.razorpay_payment_id = razorpay_payment_id or f"pay_rahma_{donation.id.hex[:10]}"
         donation.razorpay_signature = razorpay_signature or "sig_test_verified"
         donation.payment_status = 'SUCCESS'
         donation.save()
 
-        # Update Campaign stats if linked
         if donation.campaign:
             donation.campaign.collected_amount += donation.amount
             donation.campaign.donor_count += 1
             donation.campaign.save()
 
-        # Generate PDF Receipt automatically
         pdf_url = generate_pdf_receipt(donation)
 
         return Response({
@@ -178,7 +182,60 @@ class LiveCollectionStatsView(APIView):
         weekly_collected = successful_donations.filter(created_at__gte=week_start).aggregate(Sum('amount'))['amount__sum'] or 0.00
         monthly_collected = successful_donations.filter(created_at__gte=month_start).aggregate(Sum('amount'))['amount__sum'] or 0.00
         yearly_collected = successful_donations.filter(created_at__gte=year_start).aggregate(Sum('amount'))['amount__sum'] or 0.00
-        total_donors = successful_donations.values('donor_email').distinct().count()
+        total_donors = successful_donations.values('donor_phone').distinct().count()
+
+        # Top Donors (Ranked by highest donation amount)
+        top_donors_qs = successful_donations.order_by('-amount')[:10]
+        top_donors = [
+            {
+                'id': str(d.id),
+                'donor_name': d.donor_name,
+                'house_name': d.house_name,
+                'madrasa_name': d.display_madrasa,
+                'donor_phone_masked': d.donor_phone_masked,
+                'amount': float(d.amount),
+                'created_at': d.created_at
+            }
+            for d in top_donors_qs
+        ]
+
+        # Madrasa Rankings (Aggregated total collection per Madrasa)
+        all_madrasas_list = [
+            'Al-Madrasathul Islamiyya, Chapparappadavu',
+            'Hayathul Islam Madrasa, Karuvanchal',
+            'Sirajul Uloom Madrasa, Tadikkadabu',
+            'Badrul Huda Madrasa, Padappengad',
+            'Markazul Uloom Madrasa, Thervayil',
+            'Hidayathul Islam Madrasa, Mavichery',
+            'Minhajus Sunnah Madrasa, Alakkode',
+            'Darul Iman Madrasa, Karthikapuram',
+            'Irshadul Muslimeen Madrasa, Pooparamba',
+            'Nurul Islam Madrasa, Manakadavu',
+            'Busthanul Uloom Madrasa, Chengalayi',
+            'Fathima Zahra Madrasa, Reyarome',
+            'Thanjimul Muslimeen Madrasa, Ottathai',
+            'Raudul Uloom Madrasa, Nedungome',
+            'Sabeelul Huda Madrasa, Arabode',
+            'Markazus Sunnah Madrasa, Kaniyarvayal',
+            'Manharul Uloom Madrasa, Kooveri'
+        ]
+
+        madrasa_totals = {}
+        for d in successful_donations:
+            m_name = d.display_madrasa
+            madrasa_totals[m_name] = madrasa_totals.get(m_name, 0.00) + float(d.amount)
+
+        # Include 0 collection madrasas in default list for complete ranking display
+        for m in all_madrasas_list:
+            if m not in madrasa_totals:
+                madrasa_totals[m] = 0.00
+
+        # Sort madrasas descending by collection
+        sorted_madrasas = sorted(madrasa_totals.items(), key=lambda item: item[1], reverse=True)
+        madrasa_rankings = [
+            {'rank': idx + 1, 'name': m[0], 'amount': m[1]}
+            for idx, m in enumerate(sorted_madrasas)
+        ]
 
         recent_donations = DonationSerializer(successful_donations.order_by('-created_at')[:10], many=True).data
 
@@ -189,5 +246,7 @@ class LiveCollectionStatsView(APIView):
             'monthly_collected': float(monthly_collected),
             'yearly_collected': float(yearly_collected),
             'total_donors': total_donors,
+            'top_donors': top_donors,
+            'madrasa_rankings': madrasa_rankings,
             'recent_donations': recent_donations,
         })

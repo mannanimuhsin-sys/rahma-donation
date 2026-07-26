@@ -47,8 +47,8 @@ export const ReceiptModal = ({ isOpen, onClose, donation, receiptUrl }) => {
               
               <div className="d-flex justify-content-between align-items-start mb-3 pb-3 border-bottom">
                 <div>
-                  <h4 className="fw-bold text-emerald-main mb-1">Al-Rahma Central Mosque & Trust</h4>
-                  <span className="text-muted small">Registered NGO Charity • Reg: NGO-2024/786-RAHMA</span>
+                  <h4 className="fw-bold text-emerald-main mb-1">SKJM CHAPPARAPPADAVU RANGE SHEMA SAMITHI</h4>
+                  <span className="text-muted small">Registered Organization • Reg: SKJM-REG-RANGE-017</span>
                 </div>
                 <div className="text-end">
                   <span className="badge badge-gold fs-6">{donation.receipt_number}</span>
@@ -66,28 +66,28 @@ export const ReceiptModal = ({ isOpen, onClose, donation, receiptUrl }) => {
 
               {/* Details Grid */}
               <div className="row g-3 small mb-4">
-                <div className="col-6">
-                  <span className="text-muted d-block">Donor Name:</span>
+                <div className="col-6 col-md-4">
+                  <span className="text-muted d-block">ദാതാവിന്റെ പേര്:</span>
                   <strong className="fs-6 text-dark">{donation.donor_name}</strong>
                 </div>
-                <div className="col-6">
-                  <span className="text-muted d-block">Donor Email:</span>
-                  <strong className="text-dark">{donation.donor_email}</strong>
+                <div className="col-6 col-md-4">
+                  <span className="text-muted d-block">വീട്ടു പേര്:</span>
+                  <strong className="text-dark">{donation.house_name || 'N/A'}</strong>
                 </div>
-                <div className="col-6">
-                  <span className="text-muted d-block">Campaign Cause:</span>
-                  <strong className="text-dark">{donation.campaign_title || 'General Sadaqah'}</strong>
+                <div className="col-6 col-md-4">
+                  <span className="text-muted d-block">മൊബൈൽ നമ്പർ:</span>
+                  <strong className="text-dark">{donation.donor_phone_masked}</strong>
                 </div>
-                <div className="col-6">
-                  <span className="text-muted d-block">Payment Method:</span>
+                <div className="col-12 col-md-6">
+                  <span className="text-muted d-block">മദ്രസ / സ്ഥലം:</span>
+                  <strong className="text-emerald-main">{donation.display_madrasa}</strong>
+                </div>
+                <div className="col-6 col-md-3">
+                  <span className="text-muted d-block">പെയ്മെന്റ് രീതി:</span>
                   <strong className="text-dark">{donation.payment_method}</strong>
                 </div>
-                <div className="col-6">
-                  <span className="text-muted d-block">Transaction Ref:</span>
-                  <strong className="text-emerald-light">{donation.razorpay_payment_id || donation.donation_number}</strong>
-                </div>
-                <div className="col-6">
-                  <span className="text-muted d-block">Verification Status:</span>
+                <div className="col-6 col-md-3">
+                  <span className="text-muted d-block">സ്റ്റാറ്റസ്:</span>
                   <span className="badge bg-success">VERIFIED & SAVED</span>
                 </div>
               </div>

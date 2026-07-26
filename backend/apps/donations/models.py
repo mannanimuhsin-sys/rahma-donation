@@ -27,9 +27,14 @@ class Donation(models.Model):
     campaign = models.ForeignKey(Campaign, on_delete=models.SET_NULL, null=True, blank=True, related_name='donations')
     donor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='donations')
     
+    # Required Fields from User Request
     donor_name = models.CharField(max_length=255)
-    donor_email = models.EmailField()
-    donor_phone = models.CharField(max_length=20, blank=True)
+    house_name = models.CharField(max_length=255, blank=True, default='')
+    donor_email = models.EmailField(blank=True, default='')
+    donor_phone = models.CharField(max_length=20)
+    madrasa_name = models.CharField(max_length=255, default='Other')
+    other_place = models.CharField(max_length=255, blank=True, default='')
+
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     payment_method = models.CharField(max_length=30, choices=PAYMENT_METHOD_CHOICES, default='UPI')
     payment_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
@@ -43,6 +48,21 @@ class Donation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def donor_phone_masked(self):
+        """Masks mobile number leaving last 4 digits visible: XXXXXX1234"""
+        phone_str = str(self.donor_phone).strip()
+        clean_digits = ''.join(c for c in phone_str if c.isdigit())
+        if len(clean_digits) >= 4:
+            return "XXXXXX" + clean_digits[-4:]
+        return "XXXXXX" + clean_digits
+
+    @property
+    def display_madrasa(self):
+        if self.madrasa_name == 'Other' or self.madrasa_name == 'മറ്റുള്ളവ':
+            return self.other_place or 'Other Place'
+        return self.madrasa_name
+
     def save(self, *args, **kwargs):
         if not self.donation_number:
             import datetime, random
@@ -54,4 +74,4 @@ class Donation(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.donation_number} - {self.donor_name} - ₹{self.amount}"
+        return f"{self.donation_number} - {self.donor_name} ({self.house_name}) - ₹{self.amount}"
