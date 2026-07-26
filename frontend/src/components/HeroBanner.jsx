@@ -7,7 +7,6 @@ export const HeroBanner = ({ onQuickDonate, liveStats }) => {
 
   const todayCollected = liveStats?.today_collected || 0;
   const totalCollected = liveStats?.total_collected || 0;
-  const totalDonors = liveStats?.total_donors || 0;
 
   return (
     <div className="hero-gradient text-white py-4 py-md-5 position-relative">
@@ -52,7 +51,7 @@ export const HeroBanner = ({ onQuickDonate, liveStats }) => {
               </div>
             </div>
 
-            {/* Exact Quick Donate Card Model from Image 2 */}
+            {/* Quick Donate Card */}
             <div 
               className="p-3.5 p-md-4 rounded-4 shadow-2xl text-dark max-w-xl"
               style={{ background: '#fdfbf7', borderRadius: '24px' }}
@@ -99,11 +98,11 @@ export const HeroBanner = ({ onQuickDonate, liveStats }) => {
 
           </div>
 
-          {/* Right Summary Card */}
+          {/* Right Summary Card with Highlighted Big Total Collection */}
           <div className="col-lg-5 text-center">
             <div className="position-relative d-inline-block w-100">
               <div className="card rahma-card border-0 text-dark p-4 shadow-2xl rounded-4 text-start position-relative z-1" style={{ background: 'rgba(255,255,255,0.98)', borderRadius: '24px' }}>
-                <div className="d-flex align-items-center gap-3 mb-3">
+                <div className="d-flex align-items-center gap-3 mb-2">
                   <img src="/logo.png" alt="RAHMA Logo" className="img-fluid rounded-3 bg-white p-1 border shadow-sm" style={{ height: '56px', width: 'auto', objectFit: 'contain' }} />
                   <div>
                     <h5 className="fw-bold mb-0 text-emerald-main" style={{ color: '#064e3b' }}>
@@ -115,20 +114,17 @@ export const HeroBanner = ({ onQuickDonate, liveStats }) => {
 
                 <hr className="my-2" />
 
-                <div className="space-y-3 py-2">
-                  <div className="d-flex justify-content-between text-sm">
-                    <span className="text-muted">ആകെ ദാതാക്കൾ:</span>
-                    <span className="fw-bold text-dark">{totalDonors} പേർ</span>
-                  </div>
-                  <div className="d-flex justify-content-between text-sm">
-                    <span className="text-muted">ആകെ സമാഹരിച്ച തുക:</span>
-                    <span className="fw-bold text-emerald-main fs-4">
-                      ₹{totalCollected.toLocaleString('en-IN')}
-                    </span>
-                  </div>
+                {/* Highlighted Big Total Collection Box */}
+                <div className="p-3 bg-emerald-subtle rounded-4 border border-emerald-light border-opacity-30 text-center my-3 shadow-xs">
+                  <span className="text-muted small fw-bold text-uppercase d-block mb-1">
+                    ആകെ സമാഹരിച്ച തുക
+                  </span>
+                  <h2 className="fw-extrabold text-emerald-main mb-0 display-6" style={{ color: '#064e3b', fontWeight: 800 }}>
+                    ₹{totalCollected.toLocaleString('en-IN')}
+                  </h2>
                 </div>
 
-                <div className="p-3 bg-emerald-subtle rounded-3 text-emerald-main small mt-2 border border-emerald-light border-opacity-20">
+                <div className="p-3 bg-light rounded-3 text-emerald-main small border">
                   <i className="bi bi-quote me-1"></i>
                   "സദഖ നൽകുന്നവരുടെ ധനത്തിൽ അല്ലാഹു വർദ്ധനവും ബറകത്തും പ്രധാനം ചെയ്യട്ടെ."
                 </div>
