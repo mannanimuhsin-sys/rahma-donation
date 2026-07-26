@@ -6,23 +6,20 @@ import confetti from 'canvas-confetti';
 import { X, Heart, ShieldCheck, QrCode, Smartphone, CreditCard, Building, CheckCircle2, User, Home, Phone, MapPin } from 'lucide-react';
 
 export const RANGE_MADRASAS = [
-  'Al-Madrasathul Islamiyya, Chapparappadavu',
-  'Hayathul Islam Madrasa, Karuvanchal',
-  'Sirajul Uloom Madrasa, Tadikkadabu',
-  'Badrul Huda Madrasa, Padappengad',
-  'Markazul Uloom Madrasa, Thervayil',
-  'Hidayathul Islam Madrasa, Mavichery',
-  'Minhajus Sunnah Madrasa, Alakkode',
-  'Darul Iman Madrasa, Karthikapuram',
-  'Irshadul Muslimeen Madrasa, Pooparamba',
-  'Nurul Islam Madrasa, Manakadavu',
-  'Busthanul Uloom Madrasa, Chengalayi',
-  'Fathima Zahra Madrasa, Reyarome',
-  'Thanjimul Muslimeen Madrasa, Ottathai',
-  'Raudul Uloom Madrasa, Nedungome',
-  'Sabeelul Huda Madrasa, Arabode',
-  'Markazus Sunnah Madrasa, Kaniyarvayal',
-  'Manharul Uloom Madrasa, Kooveri',
+  'ചപ്പാരപ്പടവ്',
+  'പെരുമളാബാദ്',
+  'മംഗര',
+  'പടപ്പേങ്ങാട്',
+  'പെരുവണ',
+  'ശാന്തിഗിരി',
+  'എളംമ്പേരം',
+  'പെരുമ്പടവ്',
+  'വില്ലേജ്',
+  'കണ്ണങ്കെ',
+  'ഞണ്ടുംബലം',
+  'ഹബീബ് നഗർ',
+  'എടകോം',
+  'കൊട്ടക്കാനം',
   'Other'
 ];
 

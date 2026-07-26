@@ -199,25 +199,22 @@ class LiveCollectionStatsView(APIView):
             for d in top_donors_qs
         ]
 
-        # Madrasa Rankings (Aggregated total collection per Madrasa)
+        # Exact Range Madrasas provided by user
         all_madrasas_list = [
-            'Al-Madrasathul Islamiyya, Chapparappadavu',
-            'Hayathul Islam Madrasa, Karuvanchal',
-            'Sirajul Uloom Madrasa, Tadikkadabu',
-            'Badrul Huda Madrasa, Padappengad',
-            'Markazul Uloom Madrasa, Thervayil',
-            'Hidayathul Islam Madrasa, Mavichery',
-            'Minhajus Sunnah Madrasa, Alakkode',
-            'Darul Iman Madrasa, Karthikapuram',
-            'Irshadul Muslimeen Madrasa, Pooparamba',
-            'Nurul Islam Madrasa, Manakadavu',
-            'Busthanul Uloom Madrasa, Chengalayi',
-            'Fathima Zahra Madrasa, Reyarome',
-            'Thanjimul Muslimeen Madrasa, Ottathai',
-            'Raudul Uloom Madrasa, Nedungome',
-            'Sabeelul Huda Madrasa, Arabode',
-            'Markazus Sunnah Madrasa, Kaniyarvayal',
-            'Manharul Uloom Madrasa, Kooveri'
+            'ചപ്പാരപ്പടവ്',
+            'പെരുമളാബാദ്',
+            'മംഗര',
+            'പടപ്പേങ്ങാട്',
+            'പെരുവണ',
+            'ശാന്തിഗിരി',
+            'എളംമ്പേരം',
+            'പെരുമ്പടവ്',
+            'വില്ലേജ്',
+            'കണ്ണങ്കെ',
+            'ഞണ്ടുംബലം',
+            'ഹബീബ് നഗർ',
+            'എടകോം',
+            'കൊട്ടക്കാനം'
         ]
 
         madrasa_totals = {}
