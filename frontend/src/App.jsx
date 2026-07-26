@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider } from './context/AuthContext';
 import { SplashScreen } from './components/SplashScreen';
+import { TopPwaBanner } from './components/TopPwaBanner';
 import { WhatsAppSupport } from './components/WhatsAppSupport';
 
 import { HomePage } from './pages/HomePage';
@@ -21,6 +22,7 @@ export function App() {
       <AuthProvider>
         {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
         <Router>
+          <TopPwaBanner />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/donor-dashboard" element={<DonorDashboardPage />} />
