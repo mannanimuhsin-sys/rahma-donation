@@ -1,0 +1,16 @@
+# Root-level .gitignore for the RAHMA monorepo
+__pycache__/
+*.py[cod]
+.venv/
+node_modules/
+dist/
+build/
+.env
+.env.local
+db.sqlite3
+*.sqlite3
+media/
+staticfiles/
+.DS_Store
+Thumbs.db
+*.log
