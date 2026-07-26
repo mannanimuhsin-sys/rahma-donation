@@ -8,7 +8,7 @@ import { DonateModal } from '../components/DonateModal';
 import { ReceiptModal } from '../components/ReceiptModal';
 import { getCampaigns, getLiveCollectionStats, getOrganization } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
-import { Heart, ShieldCheck, CheckCircle2, MapPin, Mail, Phone, Sparkles } from 'lucide-react';
+import { Heart, ShieldCheck, CheckCircle2, MapPin, Mail, Phone, Sparkles, Home, Trophy } from 'lucide-react';
 
 export const HomePage = () => {
   const { t } = useLanguage();
@@ -55,36 +55,38 @@ export const HomePage = () => {
     setCompletedDonation(donation);
     setReceiptUrl(pdfUrl);
     setIsReceiptOpen(true);
-    loadData(); // Refresh live stats and campaign collected amounts
+    loadData(); // Refresh live stats and rankings
   };
 
   return (
     <div className="min-vh-100 d-flex flex-column bg-light">
       <Navbar onOpenDonateModal={() => handleOpenDonate(null, 1000)} />
 
+      {/* Hero Banner with SKJM Branding & Quick Amounts */}
       <HeroBanner 
         onQuickDonate={(amt) => handleOpenDonate(null, amt)} 
         liveStats={liveStats} 
       />
 
+      {/* Live Collection Leaderboards (Madrasa Rankings & Top Donors) */}
       <LiveStats stats={liveStats} />
 
-      {/* Campaigns Section */}
-      <section id="campaigns" className="py-5 bg-light">
+      {/* Active Range Campaigns Section */}
+      <section id="campaigns" className="py-5 bg-light border-top">
         <div className="container py-3">
-          <div className="d-flex flex-column flex-md-row align-items-md-end justify-content-between mb-5">
+          <div className="d-flex flex-column flex-md-row align-items-md-end justify-content-between mb-4">
             <div>
-              <span className="badge badge-emerald mb-2">{t('active_campaigns')}</span>
-              <h2 className="fw-bold text-emerald-main display-6 mb-0">Choose a Cause & Donate</h2>
+              <span className="badge badge-emerald mb-2">SKJM CHAPPARAPPADAVU RANGE</span>
+              <h2 className="fw-bold text-emerald-main display-6 mb-0">സമാഹരണ പദ്ധതികൾ (Campaigns)</h2>
             </div>
             <p className="text-muted mb-0 mt-2 mt-md-0 max-w-md">
-              100% of your Sadaqah and Zakat contributions directly support these verified causes.
+              റേഞ്ചിലെ മദ്രസകളുടെ വികസനത്തിനും വിദ്യാഭ്യാസ ആവശ്യങ്ങൾക്കുമായി ഓൺലൈനായി സംഭാവന ചെയ്യാം.
             </p>
           </div>
 
           <div className="row g-4">
             {campaigns.map((camp) => (
-              <div key={camp.id} className="col-md-6 col-lg-3">
+              <div key={camp.id} className="col-md-6 col-lg-6">
                 <CampaignCard 
                   campaign={camp} 
                   onDonate={(c) => handleOpenDonate(c, 1000)} 
@@ -95,87 +97,42 @@ export const HomePage = () => {
         </div>
       </section>
 
-      {/* About Section */}
+      {/* Clean Range Info Section (No Stock Photos) */}
       <section id="about" className="py-5 bg-white border-top">
         <div className="container py-3">
           <div className="row align-items-center gy-4">
-            <div className="col-lg-6">
-              <div className="position-relative">
-                <img 
-                  src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=1000&q=80" 
-                  alt="Mosque Exterior" 
-                  className="img-fluid rounded-4 shadow-xl w-100" 
-                  style={{ maxHeight: '420px', objectFit: 'cover' }}
-                />
-                <div className="position-absolute bottom-0 start-0 m-4 p-3 bg-emerald-main text-white rounded-3 shadow-lg max-w-xs">
-                  <div className="d-flex align-items-center gap-2 mb-1">
-                    <ShieldCheck className="text-warning" size={20} />
-                    <strong className="small">Trusted Charity Platform</strong>
-                  </div>
-                  <span className="small text-white text-opacity-80">Serving 1,500+ daily worshippers & students</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-lg-6">
-              <span className="badge badge-emerald mb-2">{t('about_title')}</span>
+            <div className="col-lg-7">
+              <span className="badge badge-emerald mb-2">ABOUT SKJM RANGE</span>
               <h2 className="fw-bold text-emerald-main display-6 mb-3">
-                Transparent & Efficient Islamic Online Donations
+                SKJM ചപ്പറപ്പടവ് റേഞ്ച് ഷെമാ സമിതി
               </h2>
               <p className="text-muted leading-relaxed mb-4">
-                {t('about_text')}
+                ചപ്പറപ്പടവ് റേഞ്ചിന് കീഴിലുള്ള 14 മദ്രസകളുടെ സുഗമമായ പ്രവർത്തനത്തിനും വിദ്യാർത്ഥികളുടെ ഉന്നമനത്തിനുമായി സംഘടിപ്പിക്കുന്ന ഡിജിറ്റൽ ഫണ്ട് സമാഹരണം. സുതാര്യവും വേഗതയേറിയതുമായ പെയ്മെന്റുകളും തത്സമയ ഡിജിറ്റൽ റസീപ്റ്റുകളും ഇതിലൂടെ ലഭ്യമാവുന്നു.
               </p>
 
-              <div className="row g-3 mb-4">
-                <div className="col-6">
-                  <div className="p-3 bg-emerald-subtle rounded-3 border border-emerald-light border-opacity-30">
-                    <h3 className="fw-bold text-emerald-main mb-1">1,500+</h3>
-                    <span className="small text-muted">Friday Worshippers</span>
-                  </div>
-                </div>
-                <div className="col-6">
-                  <div className="p-3 bg-emerald-subtle rounded-3 border border-emerald-light border-opacity-30">
-                    <h3 className="fw-bold text-emerald-main mb-1">100+</h3>
-                    <span className="small text-muted">Hifz Quran Scholars</span>
-                  </div>
+              <div className="p-4 bg-emerald-subtle rounded-4 border border-emerald-light border-opacity-30 d-flex align-items-center gap-3">
+                <ShieldCheck size={36} className="text-emerald-main flex-shrink-0" />
+                <div>
+                  <h6 className="fw-bold text-emerald-main mb-1">100% ഡിജിറ്റൽ സുതാര്യത & തത്സമയ റസീപ്റ്റ്</h6>
+                  <span className="small text-muted">നിങ്ങൾ നൽകുന്ന ഓരോ സംഭാവനക്കും ഉടനടി QR കോഡോട് കൂടിയ ഔദ്യോഗിക PDF റസീപ്റ്റ് ലഭിക്കുന്നു.</span>
                 </div>
               </div>
-
-              <button 
-                onClick={() => handleOpenDonate(null, 1000)}
-                className="btn btn-gold text-white font-bold py-3 px-4 rounded-3 d-flex align-items-center gap-2 shadow"
-              >
-                <Heart size={20} className="fill-white" />
-                <span>Make a Generous Donation Today</span>
-              </button>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Gallery Section */}
-      <section id="gallery" className="py-5 bg-light">
-        <div className="container py-3">
-          <div className="text-center max-w-xl mx-auto mb-5">
-            <span className="badge badge-emerald mb-2">MOSQUE & COMMUNITY</span>
-            <h2 className="fw-bold text-emerald-main display-6">{t('gallery_title')}</h2>
-          </div>
-
-          <div className="row g-3">
-            {[
-              { title: 'Grand Mosque Prayer Hall', img: 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=600&q=80' },
-              { title: 'Madrasa Quran Recitation', img: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=600&q=80' },
-              { title: 'Ramadan Community Iftar', img: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=600&q=80' },
-            ].map((item, idx) => (
-              <div key={idx} className="col-md-4">
-                <div className="rahma-card overflow-hidden h-100 position-relative" style={{ height: '240px' }}>
-                  <img src={item.img} alt={item.title} className="w-100 h-100 object-fit-cover" />
-                  <div className="position-absolute bottom-0 start-0 end-0 p-3 bg-dark bg-opacity-60 backdrop-blur text-white">
-                    <span className="fw-bold small">{item.title}</span>
-                  </div>
-                </div>
+            <div className="col-lg-5">
+              <div className="p-4 bg-emerald-main text-white rounded-4 shadow-xl text-center">
+                <img src="/logo.png" alt="RAHMA Logo" className="bg-white p-3 rounded-4 shadow mb-3" style={{ height: '110px', objectFit: 'contain' }} />
+                <h4 className="fw-bold text-white mb-2">ചപ്പറപ്പടവ് റേഞ്ച്</h4>
+                <p className="text-white text-opacity-80 small mb-4">14 മദ്രസകളുടെ കൂട്ടായ്മ & ഡിജിറ്റൽ സമാഹരണം</p>
+                <button 
+                  onClick={() => handleOpenDonate(null, 1000)}
+                  className="btn btn-gold text-white font-bold py-3 px-4 rounded-3 w-100 shadow"
+                >
+                  <Heart size={20} className="fill-white me-2 inline" />
+                  <span>ഇപ്പോൾ സംഭാവന ചെയ്യുക</span>
+                </button>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
