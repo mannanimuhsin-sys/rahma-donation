@@ -201,20 +201,20 @@ class LiveCollectionStatsView(APIView):
 
         # Exact Range Madrasas provided by user
         all_madrasas_list = [
-            'ചപ്പാരപ്പടവ്',
-            'പെരുമളാബാദ്',
-            'മംഗര',
-            'പടപ്പേങ്ങാട്',
-            'പെരുവണ',
-            'ശാന്തിഗിരി',
-            'എളംമ്പേരം',
-            'പെരുമ്പടവ്',
-            'വില്ലേജ്',
-            'കണ്ണങ്കെ',
-            'ഞണ്ടുംബലം',
-            'ഹബീബ് നഗർ',
-            'എടകോം',
-            'കൊട്ടക്കാനം'
+            'AINUL HUDA SECONDARY, PADAPPENGADE (2224)',
+            'BIDAYATHUL HIDAYA, KOTTAKANAM (8103)',
+            'HAYATHUL ISLAM, PERUMALABAD (2296)',
+            'HAYATHUL ISLAM, NJANDUMPALAM (5533)',
+            'HIDAYATHUL ISLAM, CHAPPARAPPADAVU (479)',
+            'MADRASATHUL RAHMANIYYA, KANNANKAI, ERYAM (5174)',
+            'MISBAHUL ULOOM, PERUVANA (4224)',
+            'MUHABATHUL ISLAM, PERUMBADAVU (6296)',
+            'MUNAVIRUL ISLAM, PERUMALABAD, VILLAGE CORNER (9519)',
+            'NOORUL ISLAM, MANKARABADARIYA NAGAR (4189)',
+            'NOORUL ISLAM, HABEEB NAGAR, PERUMALABAD (10639)',
+            'NOORULHUDA, SHANDIGIRI (8042)',
+            'RAHMANIYYA BRANCH, THAZHE IDAKKOM, PERUMALABAAD (9782)',
+            'SHAMSUL HUDA, ELAMBERAM PARA (9274)',
         ]
 
         madrasa_totals = {}

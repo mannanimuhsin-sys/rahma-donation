@@ -6,20 +6,20 @@ import confetti from 'canvas-confetti';
 import { X, Heart, ShieldCheck, QrCode, Smartphone, CreditCard, Building, CheckCircle2, User, Home, Phone, MapPin } from 'lucide-react';
 
 export const RANGE_MADRASAS = [
-  'ചപ്പാരപ്പടവ്',
-  'പെരുമളാബാദ്',
-  'മംഗര',
-  'പടപ്പേങ്ങാട്',
-  'പെരുവണ',
-  'ശാന്തിഗിരി',
-  'എളംമ്പേരം',
-  'പെരുമ്പടവ്',
-  'വില്ലേജ്',
-  'കണ്ണങ്കെ',
-  'ഞണ്ടുംബലം',
-  'ഹബീബ് നഗർ',
-  'എടകോം',
-  'കൊട്ടക്കാനം',
+  'AINUL HUDA SECONDARY, PADAPPENGADE (2224)',
+  'BIDAYATHUL HIDAYA, KOTTAKANAM (8103)',
+  'HAYATHUL ISLAM, PERUMALABAD (2296)',
+  'HAYATHUL ISLAM, NJANDUMPALAM (5533)',
+  'HIDAYATHUL ISLAM, CHAPPARAPPADAVU (479)',
+  'MADRASATHUL RAHMANIYYA, KANNANKAI, ERYAM (5174)',
+  'MISBAHUL ULOOM, PERUVANA (4224)',
+  'MUHABATHUL ISLAM, PERUMBADAVU (6296)',
+  'MUNAVIRUL ISLAM, PERUMALABAD, VILLAGE CORNER (9519)',
+  'NOORUL ISLAM, MANKARABADARIYA NAGAR (4189)',
+  'NOORUL ISLAM, HABEEB NAGAR, PERUMALABAD (10639)',
+  'NOORULHUDA, SHANDIGIRI (8042)',
+  'RAHMANIYYA BRANCH, THAZHE IDAKKOM, PERUMALABAAD (9782)',
+  'SHAMSUL HUDA, ELAMBERAM PARA (9274)',
   'Other'
 ];
 
@@ -217,7 +217,7 @@ export const DonateModal = ({ isOpen, onClose, campaign, initialAmount, onSucces
                 >
                   {RANGE_MADRASAS.map((m, idx) => (
                     <option key={idx} value={m}>
-                      {m === 'Other' ? 'മറ്റുള്ളവ (Other Place)' : `${idx + 1}. ${m}`}
+                      {m === 'Other' ? 'മറ്റുള്ളവ (Other - Enter Madrasa Name & Place)' : `${idx + 1}. ${m}`}
                     </option>
                   ))}
                 </select>
@@ -225,11 +225,11 @@ export const DonateModal = ({ isOpen, onClose, campaign, initialAmount, onSucces
                 {/* Manual Input for Other Place */}
                 {selectedMadrasa === 'Other' && (
                   <div className="mt-2">
-                    <label className="form-label small fw-bold text-emerald-main">സ്ഥലം / മദ്രസ പേര് ടൈപ്പ് ചെയ്യുക (Enter Location) *</label>
+                    <label className="form-label small fw-bold text-emerald-main">മദ്രസ പേരും സ്ഥലവും ടൈപ്പ് ചെയ്യുക (Enter Madrasa Name & Place) *</label>
                     <input
                       type="text"
                       className="form-control fw-bold"
-                      placeholder="സ്ഥലം / മദ്രസയുടെ പേര് നൽകുക"
+                      placeholder="മദ്രസ പേരും സ്ഥലവും വിവരങ്ങളും എഴുതുക"
                       value={otherPlace}
                       onChange={(e) => setOtherPlace(e.target.value)}
                       required
